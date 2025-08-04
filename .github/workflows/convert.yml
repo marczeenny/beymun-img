@@ -13,26 +13,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get list of changed jpg files
+      - name: Get list of JPG adds, mods & dels
         id: changed_jpgs
         run: |
           git fetch origin ${{ github.event.before }}
-          git diff --name-only --diff-filter=AM ${{ github.event.before }} ${{ github.sha }} -- '*.jpg' > changed_jpgs.txt
-          cat changed_jpgs.txt
-        shell: bash
-
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
-
-      - name: Create thumbnails and webp for changed files
+          # A = added, M = modified, D = deleted
+          git diff --name-status ${{ github.event.before }} ${{ github.sha }} -- '*.jpg' \
+            | grep -E '^[AMD]' > jpg_changes.txt
+      
+      - name: Process JPG changes
         run: |
-          while IFS= read -r img; do
-            [ -z "$img" ] && continue
-            # Create thumbnail
-            mkdir -p "thumbs/$(dirname "$img")"
-            convert "$img" -resize 300x300^ -gravity center -extent 300x300 "thumbs/$img"
-            # Create webp
-            mkdir -p "webp/$(dirname "$img")"
-            convert "$img" "webp/${img%.jpg}.webp"
-          done < changed_jpgs.txt
-        shell: bash
+          while read status path; do
+            case "$status" in
+              A|M)
+                # generate thumbs/$path  and webp/${path%.jpg}.webp
+                ;;
+              D)
+                # rm thumbs/$path  webp/${path%.jpg}.webp
+                ;;
+            esac
+          done < jpg_changes.txt
+
