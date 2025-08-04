@@ -1,0 +1,44 @@
+name: One-Time Bulk Asset Generation
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bulk-generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick webp
+
+      - name: Generate thumbnails and webp for all images
+        run: |
+          set -euo pipefail
+          mkdir -p thumbs webp
+          find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r path; do
+            clean_path="${path#./}"
+            filename_noext="${clean_path%.*}"
+            mkdir -p "$(dirname "thumbs/$clean_path")"
+            mkdir -p "$(dirname "webp/$filename_noext")"
+            convert "$clean_path" -resize 256x "thumbs/$clean_path"
+            cwebp -q 80 "$clean_path" -o "webp/$filename_noext.webp"
+          done
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add thumbs/ webp/
+          git commit -m "Bulk generate thumbnails and webp images" || exit 0
+          git push
