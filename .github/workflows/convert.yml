@@ -1,0 +1,37 @@
+name: Thumbnails and WebP Generation
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  thumbnails:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Generate JPG thumbnails (as before)
+      - name: Thumbnails generator (JPG)
+        uses: subic/ghaction-thumbnails@v1.1
+        with:
+          source: '2025'
+          output: 'thumbs'
+          sizes: '300'
+          extensions: 'jpg'
+          fit: 'contain'
+          position: 'center'
+          enlarge: false
+          overwrite: false
+
+      # Generate WebP thumbnails (same size as JPG)
+      - name: Thumbnails generator (WebP)
+        uses: subic/ghaction-thumbnails@v1.1
+        with:
+          source: '2025'
+          output: 'webp'
+          sizes: '0'
+          extensions: 'jpg'
+          fit: 'contain'
+          position: 'center'
+          enlarge: false
+          overwrite: false
