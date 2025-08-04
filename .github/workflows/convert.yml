@@ -4,35 +4,35 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**/*.jpg'
+
 jobs:
   thumbnails:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # Generate JPG thumbnails (as before)
-      - name: Thumbnails generator (JPG)
-        uses: subic/ghaction-thumbnails@v1.1
-        with:
-          source: '.'
-          output: 'thumbs'
-          sizes: '300'
-          extensions: 'jpg'
-          fit: 'contain'
-          position: 'center'
-          enlarge: false
-          overwrite: false
+      - name: Get list of changed jpg files
+        id: changed_jpgs
+        run: |
+          git fetch origin ${{ github.event.before }}
+          git diff --name-only --diff-filter=AM ${{ github.event.before }} ${{ github.sha }} -- '*.jpg' > changed_jpgs.txt
+          cat changed_jpgs.txt
+        shell: bash
 
       - name: Install ImageMagick
         run: sudo apt-get update && sudo apt-get install -y imagemagick
-      
-      - name: Convert JPG → WebP
+
+      - name: Create thumbnails and webp for changed files
         run: |
-          mkdir -p webp
-          find . -type f -iname '*.jpg' -print0 | while IFS= read -r -d '' img; do
-            # strip leading "./", swap .jpg → .webp
-            out="webp/${img#./}"
-            out="${out%.jpg}.webp"
-            mkdir -p "$(dirname "$out")"
-            convert "$img" "$out"
-          done
+          while IFS= read -r img; do
+            [ -z "$img" ] && continue
+            # Create thumbnail
+            mkdir -p "thumbs/$(dirname "$img")"
+            convert "$img" -resize 300x300^ -gravity center -extent 300x300 "thumbs/$img"
+            # Create webp
+            mkdir -p "webp/$(dirname "$img")"
+            convert "$img" "webp/${img%.jpg}.webp"
+          done < changed_jpgs.txt
+        shell: bash
