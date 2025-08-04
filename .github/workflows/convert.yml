@@ -46,7 +46,7 @@ jobs:
               A|M)
                 mkdir -p "$(dirname "thumbs/$path")"
                 mkdir -p "$(dirname "webp/$filename_noext")"
-                convert "$path" -resize 256x "thumbs/$path"
+                convert "$path" -resize 400x "thumbs/$path"
                 cwebp -q 80 "$path" -o "webp/$filename_noext.webp"
                 ;;
               D)
