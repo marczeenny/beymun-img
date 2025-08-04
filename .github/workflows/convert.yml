@@ -23,15 +23,10 @@ jobs:
           enlarge: false
           overwrite: false
 
-      # Generate WebP thumbnails (same size as JPG)
-      - name: Thumbnails generator (WebP)
-        uses: subic/ghaction-thumbnails@v1.1
+      - name: Convert JPG to WebP
+        uses: dlemstra/convert-images@v1
         with:
-          source: '2025'
-          output: 'webp'
-          sizes: '0'
-          extensions: 'jpg'
-          fit: 'contain'
-          position: 'center'
-          enlarge: false
-          overwrite: false
+          source: '**/*.jpg'
+          destination: 'webp'
+          format: 'webp'
+
