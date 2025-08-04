@@ -1,36 +1,66 @@
 name: Thumbnails and WebP Generation
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
       - main
     paths:
       - '**/*.jpg'
+      - '**/*.jpeg'
+      - '**/*.JPG'
+      - '**/*.JPEG'
 
 jobs:
   thumbnails:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
-      - name: Get list of JPG adds, mods & dels
+      - name: Get list of JPG/JPEG adds, mods & dels
         id: changed_jpgs
         run: |
           git fetch origin ${{ github.event.before }}
-          # A = added, M = modified, D = deleted
-          git diff --name-status ${{ github.event.before }} ${{ github.sha }} -- '*.jpg' \
+          git diff --name-status ${{ github.event.before }} ${{ github.sha }} -- '*.jpg' '*.jpeg' '*.JPG' '*.JPEG' \
             | grep -E '^[AMD]' > jpg_changes.txt
-      
-      - name: Process JPG changes
+
+      - name: Install tools
         run: |
-          while read status path; do
+          sudo apt-get update
+          sudo apt-get install -y imagemagick webp
+
+      - name: Process JPG/JPEG changes
+        run: |
+          set -euo pipefail
+          set -x
+          mkdir -p thumbs webp
+          while IFS=$'\t' read -r status path; do
+            ext="${path##*.}"
+            filename_noext="${path%.*}"
             case "$status" in
               A|M)
-                # generate thumbs/$path  and webp/${path%.jpg}.webp
+                mkdir -p "$(dirname "thumbs/$path")"
+                mkdir -p "$(dirname "webp/$filename_noext")"
+                convert "$path" -resize 256x "thumbs/$path"
+                cwebp -q 80 "$path" -o "webp/$filename_noext.webp"
                 ;;
               D)
-                # rm thumbs/$path  webp/${path%.jpg}.webp
+                rm -f "thumbs/$path" "webp/$filename_noext.webp"
                 ;;
             esac
           done < jpg_changes.txt
 
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add thumbs/ webp/
+          git commit -m "chore: update thumbnails & webp assets" || exit 0
+          git push
