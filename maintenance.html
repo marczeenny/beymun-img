@@ -1,98 +1,155 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}We'll be back soon | {{ CONF_NAME }}{% endblock %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We'll be back soon | AUBMUNC26</title>
 
-{% block head %}
-  <style>
-    #header, #footer {
-      display: none;
-    }
-    .maintenance-section {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      padding-top: 120px;
-      padding-bottom: 80px;
-      background-color: #001b67; /* Dark blue background */
-      color: white; /* White text */
-    }
+<meta name="description"
+content="AUB Model UN Conference (AUBMUNC) is one of Lebanon's prime Model UN conferences, held annually at the American University of Beirut (AUB).">
 
-    .maintenance-card {
-      background: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 48px 52px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-      color: white; /* White text for the card */
-    }
+<meta property="og:title" content="AUBMUNC 2026 | Register Now!">
+<meta property="og:description"
+content="Official website of the AUBMUN Conference. Register, explore committees, and prepare for an unforgettable diplomatic experience.">
+<meta property="og:type" content="website">
 
-    .maintenance-logo {
-      max-height: 96px;
-      margin-bottom: 18px;
-    }
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "WebSite",
+ "name": "AUBMUNC",
+ "alternateName": ["AUBMUN","AUBMUN Conference"],
+ "url": "https://mun.org.lb/"
+}
+</script>
 
-    .maintenance-eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 0.28em;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 12px;
-    }
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&display=swap" rel="stylesheet">
 
-    .maintenance-title {
-      font-size: clamp(2rem, 4vw, 3.1rem);
-      margin-bottom: 12px;
-      color: white;
-    }
+<style>
 
-    .maintenance-text {
-      font-size: 1.05rem;
-      color: white;
-    }
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
 
-    .maintenance-contact a {
-      color: white;
-      font-weight: 600;
-    }
+body{
+font-family:'Domine', serif;
+background:#001b67;
+color:white;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+}
 
-    @media (max-width: 768px) {
-      .maintenance-section {
-        padding-top: 100px;
-      }
+/* layout */
 
-      .maintenance-card {
-        padding: 36px 28px;
-      }
-    }
-  </style>
-{% endblock %}
+.container{
+width:100%;
+max-width:700px;
+padding:20px;
+}
 
-{% block header %}
- 
-{% endblock %}
+/* maintenance card */
 
-{% block footer %}{% endblock %}
+.maintenance-card{
+background:rgba(255,255,255,0.1);
+border:1px solid rgba(255,255,255,0.2);
+border-radius:20px;
+padding:40px 45px;
+box-shadow:0 25px 50px rgba(0,0,0,0.3);
+text-align:center;
+}
 
-{% block main %}
-  <section class="section maintenance-section light-background">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="maintenance-card text-center">
-            <img class="maintenance-logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="{{ CONF_NAME }} logo">
-            <div class="maintenance-eyebrow">Maintenance</div>
-            <h1 class="maintenance-title">We'll be back soon.</h1>
-            <p class="maintenance-text mb-4">
-              We're carrying out careful maintenance to keep the experience steady and secure.
-              Thank you for your patience.
-            </p>
-            <p class="maintenance-text maintenance-contact mb-0">
-              For urgent questions, email <a href="mailto:aubmunc@aub.edu.lb">aubmunc@aub.edu.lb</a>.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-{% endblock %}
+/* logo */
+
+.maintenance-logo{
+height:82px; /* slightly smaller */
+margin-bottom:14px;
+}
+
+/* text styles */
+
+.maintenance-eyebrow{
+text-transform:uppercase;
+letter-spacing:0.25em;
+font-size:0.62rem;
+font-weight:700;
+margin-bottom:10px;
+font-family: "Segoe UI";
+}
+
+.maintenance-title{
+font-size:clamp(2rem, 4vw, 3.1rem);
+margin-bottom:10px;
+}
+
+.maintenance-text{
+font-size:0.95rem;
+line-height:1.6;
+font-family: "Segoe UI";
+}
+
+.maintenance-contact{
+margin-top:12px;
+}
+
+.maintenance-contact a{
+color:white;
+font-weight:600;
+text-decoration:none;
+}
+
+@media (max-width:768px){
+
+.maintenance-card{
+padding:30px 24px;
+}
+
+.maintenance-logo{
+height:70px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="maintenance-card">
+
+<img class="maintenance-logo"
+src="https://www.mun.org.lb/static/img/logo.svg"
+alt="AUBMUNC26 logo">
+
+<div class="maintenance-eyebrow">
+Maintenance
+</div>
+
+<h1 class="maintenance-title">
+We'll be back soon.
+</h1>
+
+<p class="maintenance-text">
+We're carrying out careful maintenance to keep the experience steady and secure.
+Thank you for your patience.
+</p>
+
+<p class="maintenance-text maintenance-contact">
+For urgent questions, email
+<a href="mailto:aubmunc@aub.edu.lb">aubmunc@aub.edu.lb</a>.
+</p>
+
+</div>
+
+</div>
+
+</body>
+</html>
