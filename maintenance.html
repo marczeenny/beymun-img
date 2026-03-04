@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}We'll be back soon | {{ CONF_NAME }}{% endblock %}
+
+{% block head %}
+  <style>
+    #header, #footer {
+      display: none;
+    }
+    .maintenance-section {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 120px;
+      padding-bottom: 80px;
+      background-color: #001b67; /* Dark blue background */
+      color: white; /* White text */
+    }
+
+    .maintenance-card {
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 48px 52px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      color: white; /* White text for the card */
+    }
+
+    .maintenance-logo {
+      max-height: 96px;
+      margin-bottom: 18px;
+    }
+
+    .maintenance-eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .maintenance-title {
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      margin-bottom: 12px;
+      color: white;
+    }
+
+    .maintenance-text {
+      font-size: 1.05rem;
+      color: white;
+    }
+
+    .maintenance-contact a {
+      color: white;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .maintenance-section {
+        padding-top: 100px;
+      }
+
+      .maintenance-card {
+        padding: 36px 28px;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block header %}
+ 
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block main %}
+  <section class="section maintenance-section light-background">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="maintenance-card text-center">
+            <img class="maintenance-logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="{{ CONF_NAME }} logo">
+            <div class="maintenance-eyebrow">Maintenance</div>
+            <h1 class="maintenance-title">We'll be back soon.</h1>
+            <p class="maintenance-text mb-4">
+              We're carrying out careful maintenance to keep the experience steady and secure.
+              Thank you for your patience.
+            </p>
+            <p class="maintenance-text maintenance-contact mb-0">
+              For urgent questions, email <a href="mailto:aubmunc@aub.edu.lb">aubmunc@aub.edu.lb</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
